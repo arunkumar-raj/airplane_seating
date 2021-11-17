@@ -1,9 +1,10 @@
 <?php
+error_reporting(0);
+
 /*
 By default the loop will run by column
 Changed it to row wise
 */
-
 class AirplaneSeating
 {
  
