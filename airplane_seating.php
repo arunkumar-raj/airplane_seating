@@ -1,5 +1,4 @@
 <?php
-error_reporting(0);
 class AirplaneSeating
 {
  
@@ -37,10 +36,136 @@ class AirplaneSeating
                     }
                 }
             }
-            return $alignseat;
+
+            $aisle_seat = $this->allocate_aisle_seats($alignseat,$passenger);
+            $window_seat = $this->allocate_window_seats($aisle_seat,$passenger);
+            $middle_seat = $this->allocate_middle_seats($window_seat,$passenger);
+            return $middle_seat;
         }
     }
 
+    //Loop seats and assign aisle seats
+    private function allocate_aisle_seats($get_row_seats,$passenger){
+        if(!empty($get_row_seats)){
+            foreach($get_row_seats as $key_main => $row_seats){
+                //To know first and last row
+                $first_arr_key = array_key_first($row_seats);
+                $last_arr_key = array_key_last($row_seats);
+
+                //loop each row val and assign aisle seats
+                foreach($row_seats as $key_row => $rows){
+                    if(!$rows)
+                        continue;
+
+                    //Get first and last seat in row and assign aisle    
+                    $first_aisle_key = array_key_first($rows);
+                    $last_aisle_key = array_key_last($rows);
+
+                    //Assign values to array
+                    switch($key_row){
+                        //First row in a seat
+                        case $first_arr_key;
+                            if($key_row == $first_aisle_key){
+                                if($this->aisle < $passenger){
+                                    $this->aisle++;
+                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-Aisle';
+                                }
+                            }
+                        break;
+                        //Last row in a seat
+                        case $last_arr_key;
+                            if($key_row == $last_arr_key){
+                                $this->aisle++;
+                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-Aisle';
+                            }
+                        break;
+                        //if row is set as 2 in a seat
+                        default:
+                            $this->aisle++;
+                            $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-Aisle';
+                            $this->aisle++;
+                            $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-Aisle';
+                        break;
+                    }
+                }  
+            }
+        }
+        return $get_row_seats;  
+    }
+
+    //Loop seats and assign window seats
+    private function allocate_window_seats($get_row_seats,$passenger){
+        //assign last seat number to window variable
+        $this->window = $this->aisle;
+        if(!empty($get_row_seats)){
+            foreach($get_row_seats as $key_main => $row_seats){
+                //To know first and last row
+                $first_arr_key = array_key_first($row_seats);
+                $last_arr_key = array_key_last($row_seats);
+
+                //loop each row val and assign window seats
+                foreach($row_seats as $key_row => $rows){
+                    if(!$rows)
+                        continue;
+
+                    //Get first and last seat in row and assign window 
+                    $first_aisle_key = array_key_first($rows);
+                    $last_aisle_key = array_key_last($rows);
+
+                    switch($key_row){
+                        //First seat in a row on column
+                        case $first_arr_key;
+                            if($key_row == $first_aisle_key){
+                                $this->window++;
+                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->window.'-window';
+                            }
+                        break;
+                        //Last seat in a row on column
+                        case $last_arr_key;
+                            if($key_row == $last_arr_key){
+                                $this->window++;
+                                $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->window.'-window';
+                            }
+                        break;
+                    }
+                }
+            }
+        }
+        return $get_row_seats;  
+    }
+    //Loop seats and assign middle seats
+    private function allocate_middle_seats($get_row_seats,$passenger){
+        //assign last seat number to middle variable
+        $this->middle = $this->window;
+        if(!empty($get_row_seats)){
+            foreach($get_row_seats as $key_main => $row_seats){
+                //To know first and last row
+                $first_arr_key = array_key_first($row_seats);
+                $last_arr_key = array_key_last($row_seats);
+
+                //loop each row val and assign middle seats
+                foreach($row_seats as $key_row => $rows){
+                    if(!$rows)
+                        continue;
+
+                    //Get first and last seat in row to avoid assigning value 
+                    $first_aisle_key = array_key_first($rows);
+                    $last_aisle_key = array_key_last($rows);
+
+                    //loop each Seat to know middle seats
+                    foreach($rows as $row_key => $val){
+                        if($row_key !=$first_aisle_key && $row_key !=$last_aisle_key){
+                            $this->middle++;
+                            $get_row_seats[$key_main][$key_row][$row_key]= $this->middle.'-Middle';
+                        }
+                    }
+                       
+                        
+                }  
+            }
+        }
+        return $get_row_seats;  
+    }
 }
 
 $seating_array = [[3,2], [4,3], [2,3], [3,4]];
