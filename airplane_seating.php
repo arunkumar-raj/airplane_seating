@@ -68,23 +68,34 @@ class AirplaneSeating
                             if($key_row == $first_aisle_key){
                                 if($this->aisle < $passenger){
                                     $this->aisle++;
-                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-Aisle';
+                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-aisle';
+                                }else{
+                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= '0'.'-aisle';
                                 }
                             }
                         break;
                         //Last row in a seat
                         case $last_arr_key;
                             if($key_row == $last_arr_key){
-                                $this->aisle++;
-                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-Aisle';
+                                if($this->aisle < $passenger){
+                                    $this->aisle++;
+                                    $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-aisle';
+                                }else{
+                                    $get_row_seats[$key_main][$key_row][$first_aisle_key]= '0'.'-aisle';
+                                }
                             }
                         break;
                         //if row is set as 2 in a seat
                         default:
-                            $this->aisle++;
-                            $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-Aisle';
-                            $this->aisle++;
-                            $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-Aisle';
+                            if($this->aisle < $passenger){
+                                $this->aisle++;
+                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->aisle.'-aisle';
+                                $this->aisle++;
+                                $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->aisle.'-aisle';
+                            }else{
+                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= '0'.'-aisle';
+                                $get_row_seats[$key_main][$key_row][$last_aisle_key]= '0'.'-aisle';
+                            }
                         break;
                     }
                 }  
@@ -116,15 +127,23 @@ class AirplaneSeating
                         //First seat in a row on column
                         case $first_arr_key;
                             if($key_row == $first_aisle_key){
-                                $this->window++;
-                                $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->window.'-window';
+                                if($this->window < $passenger){
+                                    $this->window++;
+                                    $get_row_seats[$key_main][$key_row][$first_aisle_key]= $this->window.'-window';
+                                }else{
+                                    $get_row_seats[$key_main][$key_row][$first_aisle_key]= '0'.'-window';
+                                }
                             }
                         break;
                         //Last seat in a row on column
                         case $last_arr_key;
                             if($key_row == $last_arr_key){
-                                $this->window++;
-                                $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->window.'-window';
+                                if($this->window < $passenger){
+                                    $this->window++;
+                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= $this->window.'-window';
+                                }else{
+                                    $get_row_seats[$key_main][$key_row][$last_aisle_key]= '0'.'-window';
+                                }
                             }
                         break;
                     }
@@ -155,8 +174,12 @@ class AirplaneSeating
                     //loop each Seat to know middle seats
                     foreach($rows as $row_key => $val){
                         if($row_key !=$first_aisle_key && $row_key !=$last_aisle_key){
-                            $this->middle++;
-                            $get_row_seats[$key_main][$key_row][$row_key]= $this->middle.'-Middle';
+                            if($this->middle < $passenger){
+                                $this->middle++;
+                                $get_row_seats[$key_main][$key_row][$row_key]= $this->middle.'-middle';
+                            }else{
+                                $get_row_seats[$key_main][$key_row][$row_key]= '0'.'-middle';
+                            }
                         }
                     }
                        
@@ -168,9 +191,9 @@ class AirplaneSeating
     }
 }
 
-$seating_array = [[3,2], [4,3], [2,3], [3,4]];
+/*$seating_array = [[3,2], [4,3], [2,3], [3,4]];
 $passenger = 30;
 $get_plane = new AirplaneSeating;
 $plane = $get_plane->seating_arrangements($seating_array,$passenger);
-
+*/
 ?>
